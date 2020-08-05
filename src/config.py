@@ -192,3 +192,8 @@ SENDGRID_API_KEY = "sendgrid-api-key"
 
 # environment variables list
 ENV_KEYS = "env-keys"
+
+# Custering Algorithms
+CLUSTER_INDEX = "cluster-index"
+KMEANS_CLUSTERING = "kmeans"
+CLUSTERING_ALGORITHM = "clustering-algorithm"

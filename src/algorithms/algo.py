@@ -2,7 +2,7 @@ import sys
 import os
 import importlib
 import tensorflow as tf
-
+import src.algorithms.clustering.k_means_clustering as k_means_clustering
 from pprint import pprint
 from multiprocessing import Pool
 from functools import partial
@@ -23,6 +23,17 @@ from src.config import *
 def add_review_sentiment_score(review):
     return format_output_json(review, None, get_sentiment(review[MESSAGE]))
 
+
+def kmeans_clustering(reviews):
+    articles = [review[MESSAGE] for review in reviews]
+    prediction = k_means_clustering.run_algo(articles)
+
+    return [
+        format_output_json(
+            review, None, None,
+            {CLUSTER_INDEX:  int(prediction[index])})
+        for index, review in enumerate(reviews)
+    ]
 
 def text_match_categortization(review, app_config, topics):
     category_scores, category = text_match(review[MESSAGE], topics)
@@ -172,6 +183,11 @@ def run_algo():
                             topics=topics), reviews)
 
             print("[LOG] Ending Bug/Feature Categorization :: ")
+
+        if CLUSTERING_ALGORITHM in app_config and app_config[
+                CLUSTERING_ALGORITHM] == KMEANS_CLUSTERING:
+            print("[LOG] Starting Clustering algorithm :: ")
+            kmeans_clustering(reviews)
 
         dump_json(
             reviews,
